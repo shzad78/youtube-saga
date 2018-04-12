@@ -1,53 +1,60 @@
-import { YOUTUBE_KEY } from '../config/youtubekey';
-import { 
-  FETCH_VIDEOS_ATTEMPT,
-  FETCH_VIDEOS_SUCCESS,
-  FETCH_VIDEOS_FAIL,
-  SELECT_VIDEO } from '../constants';
-import axios from 'axios';
+// import YOUTUBE_KEY from '../config/youtubekey';
+import * as types from '../constants';
 
-export function getVideos(query, initial) {
-  const fixed = 'https://www.googleapis.com/youtube/v3/search';
-  let url = fixed + '?part=snippet' + '&maxResults=5' + '&q='+ query + '&key='+ YOUTUBE_KEY;
-
-  let thunk = async function(dispatch) {
-    try {
-      dispatch({type: FETCH_VIDEOS_ATTEMPT});
-      const body = await fetch(url);
-      const resp = await body.json();
-      dispatch({type: FETCH_VIDEOS_SUCCESS, payload: resp});
-      initial && dispatch({type: SELECT_VIDEO, payload: resp.items[0]});   
-    } catch(e) {
-      dispatch({type: FETCH_VIDEOS_FAIL, payload: e}); 
-    }
+export function fetchVideosAttempt() {
+  return {
+    type: types.FETCH_VIDEOS_ATTEMPT
   };
+}
 
-  thunk.meta = {
-    debounce: {
-      time: 1000,
-      key: 'FETCH_VIDEOS'
-    }
+export function fetchVideosSuccess(videos) {
+  return {
+    type: types.FETCH_VIDEOS_SUCCESS,
+    payload: videos
   };
+}
 
-  return thunk;
+export function fetchVideosFail(error) {
+  return {
+    type: types.FETCH_VIDEOS_FAIL,
+    payload: error
+  };
+}
 
-  // return function(dispatch) {
-  //   dispatch({type: FETCH_VIDEOS_ATTEMPT});
-  //   axios.get(url).then(resp=>{
-  //     dispatch({type: FETCH_VIDEOS_SUCCESS, payload: resp.data});   
-  //   }).catch(e=>{
-  //     dispatch({type: FETCH_VIDEOS_FAIL, payload: e});   
-  //   });
-  // };
-
-};
+export function fetchVideosCancel() {
+  return {
+    type: types.FETCH_VIDEOS_CANCEL
+  };
+}
 
 export function selectVideo(video) {
   return {
-    type: SELECT_VIDEO,
+    type: types.SELECT_VIDEO,
     payload: video
   };
-};
+}
 
+export function getVideos(query, initial) {
+  return {
+    type: types.FETCH_VIDEOS,
+    payload: {
+      query,
+      initial
+    }
+  };
+}
 
-
+// export function getVideos(query, initial) {
+//   return {
+//     type: types.FETCH_VIDEOS,
+//     payload: {
+//       query,
+//       initial
+//     },
+//     meta: {
+//       debounce: {
+//         time: 1000
+//       }
+//     }
+//   };
+// }

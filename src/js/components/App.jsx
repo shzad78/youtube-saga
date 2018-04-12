@@ -1,18 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios'; 
+import { func } from 'prop-types';
 
 import Nav from './Nav';
 import VideoPlayer from './VideoPlayer';
 import VideoList from './VideoList';
-import { YOUTUBE_KEY } from '../config/youtubekey';
-import { getVideos } from '../actions';
-
+import * as actions from '../actions';
 
 export class App extends React.Component {
+  componentDidMount() {
+    const { getVideos } = this.props;
+
+    getVideos('javascript', true);
+  }
 
   render() {
-
     return (
       <div className="app">
         <Nav />
@@ -23,21 +25,12 @@ export class App extends React.Component {
           <VideoList />
         </div>
       </div>
-    )
+    );
   }
+}
 
-  componentDidMount() {
-    const { getVideos } = this.props;
-
-    getVideos('javascript', true);
-  }
+App.propTypes = {
+  getVideos: func.isRequired
 };
 
-export default connect(null, {getVideos})(App);
-
-
-
-
-
-
-
+export default connect(null, { getVideos: actions.getVideos })(App);

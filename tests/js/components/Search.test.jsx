@@ -7,19 +7,20 @@ import Adapter from 'enzyme-adapter-react-16';
 import { shallow } from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 
+describe('Search Component', () => {
+  let getVideos, wrapper;
 
-describe('Testing Search Component',()=>{
-  const getVideos = jest.fn();
-  const wrapper = shallow(<Search getVideos={getVideos} />);
-  
-  it('renders the Search Component', ()=>{  
+  beforeEach(() => {
+    getVideos = jest.fn();
+    wrapper = shallow(<Search getVideos={getVideos} />);
+  });
+
+  it('renders', () => {
     expect(wrapper).toMatchSnapshot();
   });
-  
-  it('it runs the getVideos function with correct args', ()=>{
-    wrapper.find('input').simulate('change', {target:{value:'java'}})
+
+  it('runs getVideos on input handler', () => {
+    wrapper.find('input').simulate('change', { target: { value: 'java' } });
     expect(getVideos.mock.calls[0]).toEqual(['java']);
   });
-
 });
-

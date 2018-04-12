@@ -7,48 +7,76 @@ import Adapter from 'enzyme-adapter-react-16';
 import { shallow } from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 
+describe('VideoList Component', () => {
+  let videoList, selectVideo;
 
-describe('Testing VideoList Component',()=>{
-  let videoList = [{id:{videoId:1}}, {id:{videoId:2}}];
-  const selectVideo = jest.fn();
+  beforeEach(() => {
+    videoList = [
+      {
+        id: { videoId: '1' },
+        snippet: {
+          title: 'some title',
+          description: 'some description',
+          thumbnails: {
+            default: {
+              url: 'someurl'
+            }
+          }
+        }
+      },
+      {
+        id: { videoId: '2' },
+        snippet: {
+          title: 'some title2',
+          description: 'some description2',
+          thumbnails: {
+            default: {
+              url: 'someurl2'
+            }
+          }
+        }
+      }
+    ];
+    selectVideo = jest.fn();
+  });
 
-  it('renders the VideoList Component', ()=>{ 
+  it('renders', () => {
     let wrapper = shallow(
-      <VideoList 
+      <VideoList
         selectVideo={selectVideo}
         videoList={videoList}
         isLoading={false}
         error={null}
-    />); 
+      />
+    );
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders the Loading message', ()=>{ 
+  it('renders Loading message', () => {
     let wrapper = shallow(
-      <VideoList 
+      <VideoList
         selectVideo={selectVideo}
         videoList={videoList}
         isLoading={true}
         error={null}
-    />); 
+      />
+    );
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders the Error message', ()=>{ 
+  it('renders Error message', () => {
     let wrapper = shallow(
-      <VideoList 
+      <VideoList
         selectVideo={selectVideo}
         videoList={videoList}
         isLoading={false}
-        error={ {message: 'Error While loading Videos'} }
-    />); 
+        error={{ message: 'Error While loading Videos' }}
+      />
+    );
     expect(wrapper).toMatchSnapshot();
   });
 
-  
-  it('it passes on the selectVideo fn', ()=>{  
+  it('passes on the selectVideo fn', () => {
     expect(selectVideo.mock.calls.length).toBe(0);
   });
-
 });
-
